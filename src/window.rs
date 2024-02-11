@@ -1,3 +1,6 @@
+use glam::*;
+use minifb::Key;
+
 pub struct Window {
     window: minifb::Window,
     framebuffer: FrameBuffer,
@@ -37,6 +40,27 @@ impl Window {
     pub fn limit_60_fps(&mut self) {
         self.window
             .limit_update_rate(Some(std::time::Duration::from_micros(16600)));
+    }
+
+    pub fn handle_input(&mut self, origin: &mut DVec3) {
+        if self.window.is_key_down(Key::W) {
+            origin.z += 0.1;
+        }
+        if self.window.is_key_down(Key::A) {
+            origin.x -= 0.1;
+        }
+        if self.window.is_key_down(Key::S) {
+            origin.z -= 0.1;
+        }
+        if self.window.is_key_down(Key::D) {
+            origin.x += 0.1;
+        }
+        if self.window.is_key_down(Key::Space) {
+            origin.y += 0.1;
+        }
+        if self.window.is_key_down(Key::LeftShift) {
+            origin.y -= 0.1;
+        }
     }
 
     pub fn update(&mut self) {
