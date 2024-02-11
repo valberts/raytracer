@@ -1,6 +1,8 @@
 use glam::*;
 use minifb::Key;
 
+use crate::color::RGB;
+
 pub struct Window {
     window: minifb::Window,
     framebuffer: FrameBuffer,
@@ -98,7 +100,7 @@ impl FrameBuffer {
         self.height
     }
 
-    pub fn put_pixel(&mut self, x: usize, y: usize, value: u32) {
+    pub fn put_pixel(&mut self, x: usize, y: usize, color: RGB) {
         let (width, height) = (self.width as i32, self.height as i32);
 
         let screen_x = width / 2 + x as i32;
@@ -107,7 +109,8 @@ impl FrameBuffer {
         if (screen_x < 0) | (screen_x >= width) | (screen_y < 0) | (screen_y >= height) {
             return;
         }
-        self.data[screen_x as usize + screen_y as usize * self.width] = value;
+        self.data[screen_x as usize + screen_y as usize * self.width] =
+            (color.red as u32) * 65536 + (color.green as u32) * 256 + (color.blue as u32);
     }
 
     pub fn clear(&mut self, value: u32) {
