@@ -255,20 +255,26 @@ fn main() {
     let mut window = Window::new("raytracer", CANVAS_WIDTH, CANVAS_HEIGHT);
     window.limit_60_fps();
 
+    let mut camera_position = DVec3::new(0.0, 0.0, 0.0);
+
+    let mut camera_rotation =
+        DMat3::from_cols_array(&[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]);
+
     let cw = CANVAS_WIDTH as i32;
     let ch = CANVAS_HEIGHT as i32;
 
     let scene = create_scene();
-    let mut origin = DVec3::new(0.0, 0.0, 0.0);
+    // let mut origin = DVec3::new(0.0, 0.0, 0.0);
 
     while !window.should_close() {
-        window.handle_input(&mut origin);
+        window.handle_input(&mut camera_position);
         let framebuffer = window.framebuffer();
         for x in -cw / 2..cw / 2 {
             for y in -ch / 2..ch / 2 {
-                let direction = canvas_to_viewport(x as f64, y as f64);
+                // let direction = canvas_to_viewport(x as f64, y as f64);
+                let direction = camera_rotation * canvas_to_viewport(x as f64, y as f64);
                 let color = trace_ray(
-                    origin,
+                    camera_position,
                     direction,
                     1.0,
                     f64::INFINITY,
